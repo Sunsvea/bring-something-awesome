@@ -1,19 +1,24 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "@jest/globals";
 import { UserService } from "../../src/services/user.js";
 import { User } from "../../src/interfaces/user.js";
 
 describe("UserService", () => {
   const mockRepository = {
-    findById: vi.fn(),
-    create: vi.fn(),
+    findById: jest.fn(),
+    create: jest.fn(),
   };
-
   const mockCache = {
-    get: vi.fn(),
-    set: vi.fn(),
+    get: jest.fn(),
+    set: jest.fn(),
   };
-
   const userService = new UserService(mockRepository, mockCache);
+
+  // Create a fixed date for testing
+  const fixedDate = "2025-01-31T10:12:14.337Z";
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   describe("getUserById", () => {
     it("should return cached user if available", async () => {
@@ -21,13 +26,11 @@ describe("UserService", () => {
         id: "123",
         name: "Test User",
         email: "test@example.com",
-        createdAt: new Date(),
+        createdAt: fixedDate, // Changed from new Date()
       };
 
       mockCache.get.mockResolvedValue(JSON.stringify(mockUser));
-
       const result = await userService.getUserById("123");
-
       expect(result).toEqual(mockUser);
       expect(mockCache.get).toHaveBeenCalledWith("user:123");
       expect(mockRepository.findById).not.toHaveBeenCalled();
@@ -38,14 +41,12 @@ describe("UserService", () => {
         id: "123",
         name: "Test User",
         email: "test@example.com",
-        createdAt: new Date(),
+        createdAt: fixedDate, // Changed from new Date()
       };
 
       mockCache.get.mockResolvedValue(null);
       mockRepository.findById.mockResolvedValue(mockUser);
-
       const result = await userService.getUserById("123");
-
       expect(result).toEqual(mockUser);
       expect(mockCache.get).toHaveBeenCalledWith("user:123");
       expect(mockRepository.findById).toHaveBeenCalledWith("123");
@@ -62,7 +63,7 @@ describe("UserService", () => {
         id: "123",
         name: "Test User",
         email: "test@example.com",
-        createdAt: new Date(),
+        createdAt: fixedDate, // Changed from new Date()
       };
 
       const userData = {
@@ -71,9 +72,7 @@ describe("UserService", () => {
       };
 
       mockRepository.create.mockResolvedValue(mockUser);
-
       const result = await userService.createUser(userData);
-
       expect(result).toEqual(mockUser);
       expect(mockRepository.create).toHaveBeenCalledWith(userData);
       expect(mockCache.set).toHaveBeenCalledWith(

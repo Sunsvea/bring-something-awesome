@@ -1,20 +1,29 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
+// tests/services/redis-cache.test.ts
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  afterAll,
+  beforeEach,
+} from "@jest/globals";
 import { RedisCacheService } from "../../src/services/redis-cache.js";
 
 describe("RedisCacheService", () => {
   let cacheService: RedisCacheService;
 
   beforeAll(() => {
-    // Use database 1 for tests to avoid conflicts with dev data
+    // Use database 1 for tests to avoid conflicts
     cacheService = new RedisCacheService("redis://localhost:6379/1");
   });
 
   beforeEach(async () => {
-    // Clean the test DB before each test
+    // Clean the test database before each test
     await cacheService.clear();
   });
 
   afterAll(async () => {
+    // Clean shutdown after all tests
     await cacheService.disconnect();
   });
 
@@ -30,7 +39,7 @@ describe("RedisCacheService", () => {
     await new Promise((resolve) => setTimeout(resolve, 1100));
     const value = await cacheService.get("test-key");
     expect(value).toBeNull();
-  });
+  }, 2000); // Increased timeout for this specific test
 
   it("should return null for non-existent key", async () => {
     const value = await cacheService.get("non-existent");

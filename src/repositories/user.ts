@@ -13,7 +13,7 @@ export class InMemoryUserRepository implements UserRepository {
     const user: User = {
       id,
       ...userData,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(), // Changed from new Date()
     };
     this.users.set(id, user);
     return user;
