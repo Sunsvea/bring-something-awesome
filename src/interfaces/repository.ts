@@ -1,4 +1,4 @@
-import { User } from "../types/user.js";
+import { User } from "./user.js";
 
 export interface UserRepository {
   findById(id: string): Promise<User | null>;

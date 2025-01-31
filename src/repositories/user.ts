@@ -1,4 +1,4 @@
-import { User } from "../types/user.js";
+import { User } from "../interfaces/user.js";
 import { UserRepository } from "../interfaces/repository.js";
 
 export class InMemoryUserRepository implements UserRepository {

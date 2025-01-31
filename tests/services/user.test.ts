@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { UserService } from "../../src/services/user.js";
-import { User } from "../../src/types/user.js";
+import { User } from "../../src/interfaces/user.js";
 
 describe("UserService", () => {
   const mockRepository = {
